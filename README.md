@@ -1,2 +1,2 @@
 # OJ
-Online Judge including LeetCode, PAT, CCF, POJ, Cracking the Coding Interview.
+Online Judge Practice including LeetCode, POJ, Cracking the Coding Interview.
