@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include <queue>
+#include <stack>
 
 using namespace std;
 
@@ -70,6 +71,23 @@ void preOrder(node* root){
 	preOrder(root->left);
 	preOrder(root->right);
 }
+//非递归
+void preOrderNonrecursive(node* root){
+	stack<node*> s;
+	node* p = root;
+	while(p || !s.empty()){
+		if(p){
+			printf("%d\n", p->data);
+			s.push(p);
+			p = p->left;
+		}
+		else{
+			p = s.top();
+			s.pop();
+			p = p->right;
+		}
+	}
+}
 
 //2.中序遍历
 void inOrder(node* root){
@@ -78,6 +96,23 @@ void inOrder(node* root){
 	printf("%d\n", root->data);
 	inOrder(root->right);
 }
+//非递归
+void inOrderNonrecursive(node* root){
+	stack<node*> s;
+	node* p = root;
+	while(p || !s.empty()){
+		if(p){
+			s.push(p);
+			p = p->left;
+		}
+		else{
+			p = s.top();
+			printf("%d\n", p->data);
+			s.pop();
+			p = p->right;
+		}
+	}
+}
 
 //3.后序遍历
 void postOrder(node* root){
@@ -85,6 +120,31 @@ void postOrder(node* root){
 	postOrder(root->left);
 	postOrder(root->right);
 	printf("%d\n", root->data);
+}
+//非递归
+void postOrderNonrecursive(node* root){
+	stack<node*> s;
+	node *p = root, *pre = NULL;
+	while(p || !s.empty()){
+		if(p){ //只在第一次左子树压栈起作用
+			s.push(p);
+			p = p->left;
+		}
+		else{
+			p = s.top();
+			if(p->right && p->right!=pre){
+				p = p->right;
+				s.push(p);
+				p = p->left;
+			}
+			else{
+				s.pop();
+				printf("%d\n", p->data);
+				pre = p;
+				p = NULL; //下次跳过左子树压栈，直接来到else分支
+			}
+		}
+	}
 }
 
 //4.层次遍历
@@ -136,7 +196,7 @@ int search(int arr[], int start, int end, int value)
     return -1;
 }
 int *extrackKeys(int level[], int in[], int m, int n)
-{
+{	//m为子树中序遍历序列长度，每次传入全部(长度为n)的层序遍历序列
     int *newlevel = new int[m], j = 0;
     for (int i = 0; i < n; i++)
         if (search(in, 0, m-1, level[i]) != -1)
@@ -177,7 +237,7 @@ int main(){
 	//node* binaryTree = createTree(arr, 5);
 	node* binaryTree = createByLevelInOrder(arr, in, 5);
 	//deleteNode(binaryTree, 3);
-	postOrder(binaryTree);
+	postOrderNonrecursive(binaryTree);
 	//printf("%d\n", height(binaryTree));
 	return 0;
 }
