@@ -49,3 +49,32 @@ int compressPathRecursive(int x){
 		return F;
 	}
 }
+
+//Kruskal最小生成树,n为顶点个数，m为边数
+const int maxE = 10010;
+struct edge
+{
+	int u, v;
+	int cost; //边权
+}E[maxE];
+bool cmp(edge a, edge b){
+	return a.cost < b.cost;
+}
+int Kruskal(int n, int m){
+	int ans=0, edgeNum=0; //当前生成树的边数
+	for(int i=0; i<n; i++) //假设顶点范围[0,n-1]
+		father[i] = i;
+	sort(E, E+maxE, cmp);
+	for(int i=0; i<m; i++){
+		int fU = findFather(E[i].u); //找到边两个端点所在集合的根节点
+		int fV = findFather(E[i].v);
+		if(fU!=fV){
+			father[fU] = fV;
+			ans += E[i].cost;
+			edgeNum++;
+			if(edgeNum==n-1) break;
+		}
+	}
+	if(edgeNum!=n-1) return -1; //图无法连通
+	else return ans;
+}
