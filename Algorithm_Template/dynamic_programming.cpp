@@ -1,3 +1,5 @@
+//动态规划总结
+//若动态规划算法一时无法理解，则打印出dp数组观察状态变化
 #include <cstdio>
 #include <cstring>
 #include <algorithm>
@@ -181,9 +183,6 @@ int Knapsack_binary(){
 	for(int i=1; i<n; i++)
 		for(int v=V; v>=w[i]; v--)
 			dp[v] = max(dp[v], dp[v-w[i]]+c[i]);
-	for(int v=0; v<=V; v++)
-		printf("%d ", dp[v]);
-	printf("\n");
 	//寻找dp[0...V]中最大的即为最大背包容量
 	int maxV = 0;
 	for(int v=0; v<=V; v++)
