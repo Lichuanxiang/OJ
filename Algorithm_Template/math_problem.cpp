@@ -50,3 +50,27 @@ int exGCD(int a, int b, int &x, int &y){
 		return g;
 	}
 }
+
+//快速幂(求a^b%m)
+//递归
+typedef long long LL;
+LL binaryPow(LL a, LL b, LL m){
+	if(b==0) return 1;
+	if(b%2==1) return a * binaryPow(a, b-1, m) % m;
+	else{
+		LL mul = binaryPow(a, b/2, m);
+		return mul * mul % m;
+	}
+}
+//非递归(迭代)
+LL binaryPowIter(LL a, LL b, LL m){
+	LL ans = 1;
+	while(b>0){
+		if(b&1){ //判断b二进制末尾是否为1，等价于 b % 2
+			ans = ans * a % m;
+		}
+		a = a * a % m;
+		b >>= 1; //b的二进制右移一位，等价于b = b / 2
+	}
+	return ans;
+}
