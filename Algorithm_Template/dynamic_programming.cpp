@@ -19,6 +19,7 @@ public:
 	int LPS();
 	int Knapsack_binary(); //0-1背包问题
 	int Knapsack_complete(); //完全背包问题
+	int minEditDistance(); //最小编辑距离
 };
 
 //斐波那契数列，避免重复计算结果
@@ -218,6 +219,62 @@ int Knapsack_complete(){
 	return maxV;
 }
 
+//最小编辑距离
+//时间复杂度O(mn),空间复杂度O(mn)
+//dp[i][j]表示源串S[0...i]和目标串T[0...j]的最短编辑距离
+int minEditDistance(){
+	int m, n; //两字符串的长度
+	scanf("%d%d", &m, &n);
+	char A[m], B[n];
+	scanf("%s", A);
+	scanf("%s", B);
+	int i, j, cost;
+	int dp[m+1][n+1];
+	for(i=0; i<=m; i++) 
+		dp[i][0] = i;
+	for(j=0; j<=n; j++)
+		dp[0][j] = j;
+	for(i=1; i<=m; i++){
+		for(j=1; j<=n; j++){
+			cost = A[i-1]==B[j-1] ? 0 : 1;
+			int deletion = dp[i-1][j]+1;
+            int insertion = dp[i][j-1]+1;
+            int substitution = dp[i-1][j-1]+cost;
+			dp[i][j] = min(deletion, min(insertion, substitution));
+		}
+	}
+
+	return dp[m][n];
+}
+//使用滚动数组优化最短编辑距离算法
+//时间复杂度O(mn),空间复杂度O(m+n)
+//dp为滚动数组
+int minEditDistanceByScrollArray(){
+	int m, n; //两字符串的长度
+	scanf("%d%d", &m, &n);
+	char A[m], B[n];
+	scanf("%s", A);
+	scanf("%s", B);
+	int i, j, cost, temp1, temp2;
+	int dp[n+1];
+	for(j=0; j<=n; j++)
+		dp[j] = j;
+	for(i=1; i<=m; i++){
+		temp1 = dp[0]++;
+		for(j=1; j<=n; j++){
+			temp2 = dp[j];
+			cost = A[i-1]==B[j-1] ? 0 : 1;
+			int deletion = dp[j]+1;
+            int insertion = dp[j-1]+1;
+            int substitution = temp1+cost;
+			dp[j] = min(deletion, min(insertion, substitution));
+			temp1 = temp2;
+		}
+	}
+
+	return dp[n];
+}
+
 
 int main(){
 
@@ -268,8 +325,11 @@ int main(){
 		3 5 1 2 2
 		4 5 2 1 3
 	*/
-	int result = Knapsack_binary();
+	//int result = Knapsack_binary();
 	//int result = Knapsack_complete();
+
+	//int result = minEditDistance();
+	int result = minEditDistanceByScrollArray();
 
 	printf("result = %d\n", result);
 }
