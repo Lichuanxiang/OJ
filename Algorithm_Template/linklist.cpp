@@ -57,11 +57,46 @@ void del(node* head, int x){
 	}
 }
 
+//翻转链表(非递归)
+node* reverse(node* head) {
+    node *pre=NULL, *next=NULL;
+    while(head!=NULL){
+        next = head->next;
+        head->next = pre;
+        pre = head;
+        head = next;
+    }
+    return pre;
+}
+
+node* reverseRecursive(node* head){
+	//递归边界，head为空直接返回，head-next为空则为最后一个元素，返回作为头结点
+	if(head==NULL || head->next==NULL)
+		return head;
+	else{
+		node* newHead = reverseRecursive(head->next);
+		head->next->next = head; //head->next代表当前节点的下一个节点，本行代码将下一个节点指向当前节点
+		head->next = NULL; //翻转后的下一个节点跟当前节点会形成一个环，故需断掉连接
+		return newHead;
+	}
+}
+
 int main(){
 	int array[5] = {5,3,6,1,2};
 	node* L = create(array);
 	del(L, 6);
 	L = L->next;
+	for(node* L1=L; L1!=NULL; L1=L1->next){
+		printf("%d\n", L1->data);
+	}
+	printf("\n");
+	/*
+	node* L2 = reverse(L);
+	for(; L2!=NULL; L2=L2->next){
+		printf("%d\n", L2->data);
+	}
+	*/
+	L= reverseRecursive(L);
 	for(; L!=NULL; L=L->next){
 		printf("%d\n", L->data);
 	}
