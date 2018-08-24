@@ -2,6 +2,7 @@
 //若动态规划算法一时无法理解，则打印出dp数组观察状态变化
 #include <cstdio>
 #include <cstring>
+#include <iostream>
 #include <algorithm>
 
 using namespace std;
@@ -19,6 +20,7 @@ public:
 	int LPS();
 	int Knapsack_binary(); //0-1背包问题
 	int Knapsack_complete(); //完全背包问题
+	int Knapsack_multiple(); //多重背包问题
 	int minEditDistance(); //最小编辑距离
 };
 
@@ -217,6 +219,43 @@ int Knapsack_complete(){
 		if(maxV<dp[v])
 			maxV = dp[v];
 	return maxV;
+}
+
+//多重背包问题
+//每种物品可有限定数量件
+//解决多重背包问题，只需要把它转化为0-1背包问题即可。
+//比如，有2件价值为5，重量为2的同一物品，我们就可以分为物品a和物品b，
+//a和b的价值都为5，重量都为2，但我们把它们视作不同的物品。
+int Knapsack_multiple(){
+	const int V = 1000
+	int weight[50 + 1];
+	int value[50 + 1];
+	int num[20 + 1];
+	int f[V + 1];
+	int n, m;
+    cout << "请输入物品个数:";
+    cin >> n;
+    cout << "请分别输入" << n << "个物品的重量、价值和数量:" << endl; 
+    for (int i = 1; i <= n; i++) {
+        cin >> weight[i] >> value[i] >> num[i];
+    }
+    int k = n + 1;
+    for (int i = 1; i <= n; i++) {
+        while (num[i] != 1) {
+            weight[k] = weight[i];
+            value[k] = value[i];
+            k++;
+            num[i]--;
+        }
+    }
+    cout << "请输入背包容量:";
+    cin >> m;
+    for (int i = 1; i <= k; i++) {
+        for (int j = m; j >= 1; j--) {
+            if (weight[i] <= j) f[j] = max(f[j], f[j - weight[i]] + value[i]);
+        }
+    }
+    cout << "背包能放的最大价值为:" << f[m] << endl;
 }
 
 //最小编辑距离
