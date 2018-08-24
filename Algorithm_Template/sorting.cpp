@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <algorithm>
+#include <stack>
 
 using namespace std;
 
@@ -31,11 +32,14 @@ void bubbleSort(int A[], int n){
 
 void insertSort(int A[], int n){
 	for(int i=1; i<n; i++){
+		//交换法
 		for(int j = i; j>0 && A[j-1]>A[j]; j--){
 			int temp = A[j];
 			A[j] = A[j-1];
 			A[j-1] = temp;
 		}
+		//移位法
+		
 	}
 }
 
@@ -103,6 +107,7 @@ int Partition(int A[], int left, int right){
 	return left;
 }
 
+//递归版
 void quicksort(int A[], int left, int right){
 	if(left<right){
 		int pos = Partition(A, left, right);
@@ -110,9 +115,37 @@ void quicksort(int A[], int left, int right){
 		quicksort(A, pos+1, right);
 	}
 }
+//快排非递归版
+void quicksortNonRecursive(int A[], int left,int right){
+    if (left < 0 || right <= 0 || left>right)
+        return;
+    stack<int> temp;
+    int i, j;
+    //（注意保存顺序）先将初始状态的左右指针压栈
+    temp.push(right);//先存右指针
+    temp.push(left);//再存左指针
+    while (!temp.empty()){
+        i = temp.top();//先弹出左指针
+        temp.pop();
+        j = temp.top();//再弹出右指针
+        temp.pop();
+        if (i < j){
+            int k = Partition(A, i, j);
+            if (k > i){
+                temp.push(k - 1);//保存中间变量
+                temp.push(i);  //保存中间变量 
+            }
+            if (j > k){
+                temp.push(j);
+                temp.push(k + 1);
+            }
+        }
+    }
+}
 
 void quickSort(int A[], int n){
-	quicksort(A, 0, n-1);
+	//quicksort(A, 0, n-1);
+	quicksortNonRecursive(A, 0, n-1);
 }
 
 //归并排序
@@ -155,7 +188,7 @@ void mergeSortNonrecursive(int A[], int n){
 	}
 }
 
-//堆排序
+//堆排序(自上向下调整)
 int adjustHeap(int heap[], int i, int n){
 	int temp = heap[i];
 	//j为i节点的左孩子(heap下标从0开始则为2i+1，从1开始则为2i)
@@ -173,7 +206,7 @@ int adjustHeap(int heap[], int i, int n){
 }
 
 void heapSort(int heap[], int n){
-	//构建大顶堆
+	//构建大顶堆(建堆操作)
 	for(int i=n/2; i>=0; i--)
 		adjustHeap(heap, i, n);
 	//交换堆顶元素与末尾元素+调整堆结构
@@ -195,7 +228,7 @@ void cStandardSort(int A[], int n){
 
 int main(){
 	int A[5] = {3,2,1,6,5};
-	shellSortSwap(A, 5);
+	quickSort(A, 5);
 	for(int i=0; i<5; i++){
 		printf("%d ", A[i]);
 	}

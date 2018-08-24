@@ -9,7 +9,7 @@ const int INF = 1000000000;
 
 //邻接链表版DFS
 vector<int> Adj[maxn]; //数组中有最多maxn个vector
-int n = 10;
+int n = 10; //实际顶点数目
 bool vis[maxn] = {false};
 
 void DFSAdj(int u, int &depth){
